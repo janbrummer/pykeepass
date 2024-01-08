@@ -133,6 +133,42 @@ class PyKeePass():
             else:
                 raise
 
+
+        if decrypt:
+            self._parse_custom_icons()
+
+    def _parse_custom_icons(self):
+        icons = self._xpath('/KeePassFile/Meta/CustomIcons', first=True)
+
+        self.custom_icons = []
+
+        for icon in icons:
+            print(icon)
+            uuid = None
+            name = None
+            data = None
+
+            for i in icon:
+                if i.tag == 'UUID':
+                    uuid = i.text
+                elif i.tag == 'Name':
+                    name = i.text
+                elif i.tag == 'Data':
+                    data = i.text
+
+                if uuid and name and data:
+                    self.custom_icons.append({'uuid': uuid, 'name': name, 'data': data})
+
+        for icon in self.custom_icons:
+            print ("Found custom icon: " + icon['name'] + "UUID: " + icon['uuid'])
+
+    def get_custom_icon(self, uuid):
+        for icon in self.custom_icons:
+            if icon['uuid'] == uuid:
+                return base64.b64decode(icon['data'])
+
+        return None
+
     def reload(self):
         """Reload current database using previous credentials """
 

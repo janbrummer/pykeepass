@@ -75,6 +75,11 @@ class BaseElement():
         return self._set_subelement_text('UUID', b64_uuid)
 
     @property
+    def custom_icon(self):
+        uuid = self._get_subelement_text('CustomIconUUID')
+        return uuid
+
+    @property
     def icon(self):
         return self._get_subelement_text('IconID')
 
